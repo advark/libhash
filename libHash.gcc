@@ -1,0 +1,119 @@
+##
+## Project: libHash
+##
+## Author : Yanick Poirier
+##
+## Linux makefile
+##
+## Requires the follwing shell commands: 
+## 		rm, mkdir, strip, ln
+##
+
+### -------------------------------------------------------------------
+### COMMANDS
+### -------------------------------------------------------------------
+
+LN	:= /bin/ln
+RM	:= /bin/rm
+MKDIR	:= /bin/mkdir
+STRIP	:= /usr/bin/strip
+
+### -------------------------------------------------------------------
+### TARGET CONFIGURATION
+### -------------------------------------------------------------------
+
+# Sets default configuration to Debug
+#CFG	?= Debug
+
+ifeq "$(CFG)" "Debug"
+	COMFLAGS	:= -c -g -ggdb -o0
+	LDFLAGS		:=
+endif
+
+ifeq "$(CFG)" "Release"
+	COMFLAGS	:= -c -o3
+	LDFLAGS		:=
+endif
+
+ifeq "$(CFG)" ""
+	@echo "Usage: make -f libHash.gcc <Build>"
+	@echo "    where build is either Debug or Release"
+endif
+
+### -------------------------------------------------------------------
+### COMMON SETTINGS
+### -------------------------------------------------------------------
+
+VER_MAJOR	:= 1
+VER_MINOR	:= 0
+VER_RELEASE	:= 0
+VERSION		:= $(VER_MAJOR).$(VER_MINOR).$(VER_RELEASE)
+SRCDIR		:= src
+DISTDIR		:= distrib
+INTDIR		:= $(CFG)
+TARGETNAME	:= libhash-$(VERSION).so
+TARGETDIR	:= $(DISTDIR)/$(CFG)
+TARGET		:= $(TARGETDIR)/$(TARGETNAME)
+INCLFLAGS	:= -Iinclude
+CXXFLAGS	:= $(COMFLAGS) -m64 -std=c++98 -c -Wall -finput-charset=iso8859-1 -fPIC -fvisibility=hidden -DBUILD_LIBHASH
+LDFLAGS		:= $(LDFLAGS) -fPIC -shared -fvisibility=hidden -Wl,-x -Wl,-z,defs
+
+### -------------------------------------------------------------------
+### SOURCES AND OBJECT FILES
+### -------------------------------------------------------------------
+
+SRCS	:= hashbase.cpp md5.cpp sha1.cpp sha2_224.cpp sha2_256.cpp \
+			sha2_384.cpp sha2_512.cpp crc32.cpp
+
+OBJS	:= $(addprefix $(INTDIR)/,$(patsubst %.cpp,%.o,$(SRCS)))
+DEPS	:= $(patsubst %.o,%.dep,$(OBJS))
+
+### -------------------------------------------------------------------
+### PATTERN RULES
+### -------------------------------------------------------------------
+
+.PRECIOUS: $(INTDIR)/%.dep
+
+$(INTDIR)/%.dep : $(SRCDIR)/%.cpp
+	$(info Generating dependencies for $<...)
+	@$(CPP) $(CPPFLAGS) -MF"$@" -MM -MT"$(INTDIR)/$(*F).o" "$<"
+
+$(INTDIR)/%.o : $(SRCDIR)/%.cpp
+	$(info Compiling $<... )
+	@$(CXX) $(CXXFLAGS) $(INCLFLAGS) -o "$@" "$<"
+
+$(TARGET) : $(OBJS)
+	$(info  Linking $@... )
+	@$(CXX) $(LDFLAGS) -o $(TARGET) $(OBJS)
+
+### -------------------------------------------------------------------
+### TARGETS
+### -------------------------------------------------------------------
+
+all:
+
+build: MakeDirectories $(OBJS) $(TARGET)
+ifeq "$(CFG)" "Release"
+	@$(STRIP) -x $(TARGET)
+endif
+	@$(LN) -sf libhash-$(VERSION).so $(TARGETDIR)/libhash-$(VER_MAJOR).so
+	@$(LN) -sf libhash-$(VERSION).so $(TARGETDIR)/libhash.so
+
+clean:
+	@$(RM) -f $(OBJS) 
+	@$(RM) -f $(DEPS) 
+	@$(RM) -f $(TARGET)
+
+rebuild: clean build
+
+MakeDirectories:
+	@$(MKDIR) -p $(INTDIR)
+	@$(MKDIR) -p $(TARGETDIR)
+
+
+### -------------------------------------------------------------------
+### EXTERNAL DEPENDENCIES
+### -------------------------------------------------------------------
+
+-include $(DEPS)
+
