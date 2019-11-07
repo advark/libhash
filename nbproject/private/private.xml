@@ -11,6 +11,7 @@
             <file>file:/Projects/software/C-C++/libhash/include/libhash/crc32.h</file>
             <file>file:/Projects/software/C-C++/libhash/tests/SHA1Tests.cpp</file>
             <file>file:/Projects/software/C-C++/libhash/src/md5.cpp</file>
+            <file>file:/Projects/software/C-C++/libhash/src/sha2.cpp</file>
             <file>file:/Projects/software/C-C++/libhash/tests/CRC32Tests.cpp</file>
             <file>file:/Projects/software/C-C++/libhash/include/libhash/sha2.h</file>
             <file>file:/Projects/software/C-C++/libhash/include/libhash/sha1.h</file>
@@ -23,9 +24,9 @@
             <file>file:/Projects/software/C-C++/libhash/tests/MD5Tests.cpp</file>
             <file>file:/Projects/software/C-C++/libhash/include/libhash/defs.h</file>
             <file>file:/Projects/software/C-C++/libhash/include/libhash/hashbase.h</file>
-            <file>file:/Projects/software/C-C++/libhash/README.md</file>
             <file>file:/Projects/software/C-C++/libhash/src/sha1.cpp</file>
             <file>file:/Projects/software/C-C++/libhash/include/libhash/libhash.h</file>
+            <file>file:/Projects/software/C-C++/libhash/tests/SHA2Tests.cpp</file>
         </group>
     </open-files>
 </project-private>
