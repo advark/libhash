@@ -155,6 +155,13 @@ int LIBHASH_API hash_crc32_finalize( void *h );
 int LIBHASH_API hash_crc32_get_value( void *h, uint8_t *buf, size_t len );
 int LIBHASH_API hash_crc32_destroy( void *h );
 
+void LIBHASH_API* hash_crc32c_create( );
+int LIBHASH_API hash_crc32c_init( void *h );
+int LIBHASH_API hash_crc32c_update( void *h, void *buf, size_t len );
+int LIBHASH_API hash_crc32c_finalize( void *h );
+int LIBHASH_API hash_crc32c_get_value( void *h, uint8_t *buf, size_t len );
+int LIBHASH_API hash_crc32c_destroy( void *h );
+
 #    ifdef __cplusplus
 }   // extern "C"
 #    endif
