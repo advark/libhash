@@ -3,13 +3,13 @@ Copyright(c) 2017-19, Yanick Poirier
 
 ## Version History
 
-0.1     Initial release
-0.1.1   -Added CRC-32C
-        -Fixed a bug in CRC-32
-        -Fixed a bug in SHA2-224
-        -Fixed a bug in SHA2-384
-        -Merge all SHA2 algorithms in a single source file (sha2.cpp)
-        -Move project to Netbeans 11 (removed libHash.gcc)
+* 0.1     Initial release
+* 0.1.1   * Added CRC-32C
+          * Fixed a bug in CRC-32
+          * Fixed a bug in SHA2-224
+          * Fixed a bug in SHA2-384
+          * Merge all SHA2 algorithms in a single source file (sha2.cpp)
+          * Move project to Netbeans 11 (removed libHash.gcc)
 
 ## Description
 libHash is C/C++ library that provides a data hashing API. Supported algorithms are
