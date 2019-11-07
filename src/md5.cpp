@@ -1,8 +1,25 @@
-// ////////////////////////////////////////////////////////////////////////////
+/*
+ * Copyright (C) 2017-19 Yanick Poirier <ypoirier at hotmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//=============================================================================
 // System:     libHash
 // File:       md5.cpp
 //
-// Author:     Yanick Poirier       ypoirier@hotmail.com
+// Author:     Yanick Poirier
 // Date:       2017-01-21
 //
 // Description
@@ -10,9 +27,7 @@
 //
 // Derived from the RSA Data Security, Inc.
 // MD5 Message-Digest Algorithm
-//
-// Copyright (c) 2017, Yanick Poirier. All rights reserved.
-// ////////////////////////////////////////////////////////////////////////////
+//=============================================================================
 
 // ============================================================================
 // HEADER FILES
@@ -63,16 +78,19 @@ using namespace libhash;
 // F, G, H and I are basic MD5 functions.
 
 inline uint32_t F( uint32_t x, uint32_t y, uint32_t z ) {
-    return( x & y ) | ( ~x & z );
+    return ( x & y ) | ( ~x & z );
 }
+
 inline uint32_t G( uint32_t x, uint32_t y, uint32_t z ) {
-    return( x & z ) | ( y & ~z );
+    return ( x & z ) | ( y & ~z );
 }
+
 inline uint32_t H( uint32_t x, uint32_t y, uint32_t z ) {
     return x ^ y ^ z;
 }
+
 inline uint32_t I( uint32_t x, uint32_t y, uint32_t z ) {
-    return y ^ (x | ~z);
+    return y ^ ( x | ~z );
 }
 
 // FF, GG, HH, and II transformations for rounds 1, 2, 3, and 4.
@@ -89,11 +107,13 @@ inline void GG( uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uin
     a = ROTL( a, s, 32 );
     a += b;
 }
+
 inline void HH( uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac ) {
     a += H( b, c, d ) + x + ac;
     a = ROTL( a, s, 32 );
     a += b;
 }
+
 inline void II( uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uint32_t s, uint32_t ac ) {
     a += I( b, c, d ) + x + ac;
     a = ROTL( a, s, 32 );
@@ -103,34 +123,34 @@ inline void II( uint32_t &a, uint32_t b, uint32_t c, uint32_t d, uint32_t x, uin
 /**
  * @internal
  *
- * Encodes input (uint32_t) into output (uint8_t). Assumes len is a multiple of 
- * 4. Values are encoded in little-endian format. 
+ * Encodes input (uint32_t) into output (uint8_t). Assumes len is a multiple of
+ * 4. Values are encoded in little-endian format.
  */
 static void encode( uint8_t *output, uint32_t *input, uint32_t len ) {
     unsigned int i, j;
 
     for( i = 0, j = 0; j < len; i++, j += 4 ) {
-        output[ j ] = (uint8_t) (input[ i ] & 0xff);
-        output[ j + 1 ] = (uint8_t) ((input[ i ] & 0x0000ff00 ) >> 8);
-        output[ j + 2 ] = (uint8_t) ((input[ i ] & 0x00ff0000 ) >> 16);
-        output[ j + 3 ] = (uint8_t) ((input[ i ] & 0xff000000 ) >> 24);
+        output[ j ] = (uint8_t) ( input[ i ] & 0xff );
+        output[ j + 1 ] = (uint8_t) ( ( input[ i ] & 0x0000ff00 ) >> 8 );
+        output[ j + 2 ] = (uint8_t) ( ( input[ i ] & 0x00ff0000 ) >> 16 );
+        output[ j + 3 ] = (uint8_t) ( ( input[ i ] & 0xff000000 ) >> 24 );
     }
 }
 
 /**
  * @internal
  *
- * Decodes input (uint8_t) into output (uint32_t). Assumes len is a multiple of 
- * 4. Values are decoded from little-endian format. 
+ * Decodes input (uint8_t) into output (uint32_t). Assumes len is a multiple of
+ * 4. Values are decoded from little-endian format.
  */
 static void decode( uint32_t *output, uint8_t *input, uint32_t len ) {
     uint32_t i, j;
 
     for( i = 0, j = 0; j < len; i++, j += 4 ) {
-        output[ i ] = ( (uint32_t) input[ j ]) |
-                      (( (uint32_t) input[ j + 1 ]) << 8) |
-                      (( (uint32_t) input[ j + 2 ]) << 16) |
-                      (( (uint32_t) input[ j + 3 ]) << 24);
+        output[ i ] = ( (uint32_t) input[ j ] ) |
+                ( ( (uint32_t) input[ j + 1 ] ) << 8 ) |
+                ( ( (uint32_t) input[ j + 2 ] ) << 16 ) |
+                ( ( (uint32_t) input[ j + 3 ] ) << 24 );
     }
 }
 
@@ -146,7 +166,8 @@ static unsigned char PADDING[64] = {
 };
 
 // -------------------------------------------------------------------------
-void MD5::init() {
+
+void MD5::init( ) {
     mBitCount[ 0 ] = 0;
     mBitCount[ 1 ] = 0;
 
@@ -166,12 +187,12 @@ void MD5::update( const void *data, size_t size ) {
     index = ( mBitCount[ 0 ] >> 3 ) & 0x3F;
 
     // Update number of bits
-    mBitCount[ 0 ] += ( size << 3);
-    if( mBitCount[ 0 ] < ( size << 3) ) {
+    mBitCount[ 0 ] += ( size << 3 );
+    if( mBitCount[ 0 ] < ( size << 3 ) ) {
         mBitCount[ 1 ]++;
     }
 
-    mBitCount[ 1 ] += ( size >> 29);
+    mBitCount[ 1 ] += ( size >> 29 );
 
     partLen = 64 - index;
 
@@ -181,7 +202,7 @@ void MD5::update( const void *data, size_t size ) {
         transform( mBlock );
 
         for( i = partLen; i + 63 < size; i += 64 ) {
-            transform( ( (uint8_t *) data) + i );
+            transform( ( (uint8_t *) data ) + i );
         }
 
         index = 0;
@@ -191,12 +212,12 @@ void MD5::update( const void *data, size_t size ) {
     }
 
     // Buffer remaining input
-    ::memcpy( mBlock + index, ( (uint8_t *) data) + i, size - i );
+    ::memcpy( mBlock + index, ( (uint8_t *) data ) + i, size - i );
 }
 
 // -------------------------------------------------------------------------
 
-void MD5::finalize() {
+void MD5::finalize( ) {
     uint8_t bits[8];
     uint32_t index, padLen;
 
@@ -204,8 +225,8 @@ void MD5::finalize() {
     encode( bits, mBitCount, 8 );
 
     // Pad out to 56 mod 64.
-    index =  (mBitCount[ 0 ] >> 3) & 0x3f;
-    padLen = (index < 56) ? (56 - index) : (120 - index);
+    index =  ( mBitCount[ 0 ] >> 3 ) & 0x3f;
+    padLen = ( index < 56 ) ? ( 56 - index ) : ( 120 - index );
     update( PADDING, padLen );
 
     // Append length (before padding)
@@ -215,7 +236,7 @@ void MD5::finalize() {
     encode( mHash, mState, 16 );
 
     // Zeroize sensitive information.
-    ::memset( mBlock, 0, sizeof(mBlock) );
+    ::memset( mBlock, 0, sizeof (mBlock ) );
     mBitCount[ 0 ] = 0;
     mBitCount[ 1 ] = 0;
 
@@ -230,7 +251,7 @@ void MD5::finalize() {
 /**
  * @brief MD5 basic transformation.
  *
- * Transforms the current state based on the content of the specified block. 
+ * Transforms the current state based on the content of the specified block.
  *
  * @param block Data block to process.
  */
@@ -321,7 +342,7 @@ void MD5::transform( uint8_t *block ) {
     mState[ 3 ] += d;
 
     // Zeroize sensitive information.
-    ::memset( &x, 0, sizeof(x) );
+    ::memset( &x, 0, sizeof (x ) );
 }
 
 // -------------------------------------------------------------------------
@@ -329,10 +350,10 @@ void MD5::transform( uint8_t *block ) {
 /**
  * @brief Creates a new MD5 handler.
  *
- * @return pointer to the newly created MD5 handler or <tt>null</tt> on error. 
+ * @return pointer to the newly created MD5 handler or <tt>null</tt> on error.
  */
-void* hash_md5_create() {
-    return new MD5();
+void* hash_md5_create( ) {
+    return new MD5( );
 }
 
 // -------------------------------------------------------------------------
@@ -340,19 +361,19 @@ void* hash_md5_create() {
 /**
  * @brief Initializes the specified MD5 handler.
  *
- * This function prepares the MD5 handler for hashing data. It must be called 
- * prior the first {@link hash_md5_update} or {@link hash_md5_final} calls. 
+ * This function prepares the MD5 handler for hashing data. It must be called
+ * prior the first {@link hash_md5_update} or {@link hash_md5_final} calls.
  *
- * @param h Pointer to a valid MD5 handler. Cannot be <tt>NULL</tt>. 
+ * @param h Pointer to a valid MD5 handler. Cannot be <tt>NULL</tt>.
  *
- * @return a non-zero value on success of 0 if <tt>h</tt> is not valid. 
+ * @return a non-zero value on success of 0 if <tt>h</tt> is not valid.
  */
 int hash_md5_init( void *h ) {
     int rc = 0;
     MD5 *md5 = dynamic_cast<MD5 *> ( (HashingBase *) h );
 
     if(  md5 != NULL ) {
-        md5->init();
+        md5->init( );
         rc = 1;
     }
 
@@ -362,18 +383,18 @@ int hash_md5_init( void *h ) {
 // -------------------------------------------------------------------------
 
 /**
- * @brief Updates the specified MD5 handler's state with the data. 
+ * @brief Updates the specified MD5 handler's state with the data.
  *
- * This function updates the MD5 handler's state by hashing data. It must be 
- * called after {@link hash_md5_init} and before {@link hash_md5_final}. The 
- * result of calling this function before {@link hash_md5_init} or after {@link 
+ * This function updates the MD5 handler's state by hashing data. It must be
+ * called after {@link hash_md5_init} and before {@link hash_md5_final}. The
+ * result of calling this function before {@link hash_md5_init} or after {@link
  * hash_md5_final} is undefined.
  *
- * @param h   Pointer to a valid MD5 handler. Cannot be <tt>NULL</tt>. 
+ * @param h   Pointer to a valid MD5 handler. Cannot be <tt>NULL</tt>.
  * @param buf Pointer to a set of data to hash.
  * @param len Number of bytes in <tt>buf</tt> to hash.
  *
- * @return a non-zero value on success of 0 if <tt>h</tt> is not valid. 
+ * @return a non-zero value on success of 0 if <tt>h</tt> is not valid.
  */
 int hash_md5_update( void *h, void *buf, size_t len ) {
     int rc = 0;
@@ -392,15 +413,15 @@ int hash_md5_update( void *h, void *buf, size_t len ) {
 /**
  * @brief Finalizes the specified MD5 handler's state.
  *
- * This function finalizes the MD5 handler's state and returns the hashing 
- * value. It must be called after {@link hash_md5_init} The result of calling 
- * this function before {@link hash_md5_init} is undefined. 
+ * This function finalizes the MD5 handler's state and returns the hashing
+ * value. It must be called after {@link hash_md5_init} The result of calling
+ * this function before {@link hash_md5_init} is undefined.
  *
- * @param h   Pointer to a valid MD5 handler. Cannot be <tt>NULL</tt>. 
- * @param buf Pointer to buffer to receive the calculated hash value. 
+ * @param h   Pointer to a valid MD5 handler. Cannot be <tt>NULL</tt>.
+ * @param buf Pointer to buffer to receive the calculated hash value.
  * @param len Number of bytes in <tt>buf</tt>.
  *
- * @return a non-zero value on success of 0 if <tt>h</tt> is not valid. 
+ * @return a non-zero value on success of 0 if <tt>h</tt> is not valid.
  */
 int hash_md5_finalize( void *h ) {
     int rc = 0;
@@ -408,7 +429,7 @@ int hash_md5_finalize( void *h ) {
 
     if(  md5 != NULL ) {
         rc = 1;
-        md5->finalize();
+        md5->finalize( );
     }
 
     return rc;
@@ -417,16 +438,16 @@ int hash_md5_finalize( void *h ) {
 // -------------------------------------------------------------------------
 
 /**
- * @brief Retrieves the hashing value after the last <tt>hash_md5_finalize</tt> 
+ * @brief Retrieves the hashing value after the last <tt>hash_md5_finalize</tt>
  *        function call.
  *
- * The result of calling this method prior to the {@link hash_md5_finalize} 
- * method is undefined. If the memory buffer is smaller than the hash size, only 
- * the higher part of the hash value is returned. 
- *  
- * If <tt>h</tt> is not a valid MD5 handler, the function returns immediately. 
+ * The result of calling this method prior to the {@link hash_md5_finalize}
+ * method is undefined. If the memory buffer is smaller than the hash size, only
+ * the higher part of the hash value is returned.
  *
- * @param h   Pointer to a valid MD5 handler. 
+ * If <tt>h</tt> is not a valid MD5 handler, the function returns immediately.
+ *
+ * @param h   Pointer to a valid MD5 handler.
  * @param buf  Memory buffer to receive the hashing result.
  * @param size Size of the memory buffer in bytes.
  *
@@ -449,7 +470,7 @@ int hash_md5_get_value( void *h, uint8_t *buf, size_t len ) {
  * Destroys an existing MD5 handler.
  *
  * @param h Pointer to a valid MD5 handler. Cannot be <tt>NULL</tt>.
- *  
+ *
  * @return a non-zero value on success or 0 on error.
  */
 int hash_md5_destroy( void *h ) {

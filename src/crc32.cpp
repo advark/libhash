@@ -1,19 +1,34 @@
-// ////////////////////////////////////////////////////////////////////////////
+/*
+ * Copyright (C) 2017-19 Yanick Poirier <ypoirier at hotmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+//=============================================================================
 // System:     libHash
 // File:       crc32.cpp
 //
-// Author:     Yanick Poirier       ypoirier@hotmail.com
+// Author:     Yanick Poirier
 // Date:       2017-03-20
 //
 // Description
-// CRC-32 hashing algorithm implementation
-//
-// Copyright (c) 2017, Yanick Poirier. All rights reserved.
-// ////////////////////////////////////////////////////////////////////////////
+// CRC-32 hashing algorithm implementation.
+//=============================================================================
 
-// ============================================================================
+//-----------------------------------------------------------------------------
 // HEADER FILES
-// ============================================================================
+//-----------------------------------------------------------------------------
 
 #include <stdlib.h>
 #include <string.h>
@@ -23,123 +38,199 @@
 
 using namespace libhash;
 
-// ============================================================================
-// CONSTANTS & MACROS
-// ============================================================================
+//-----------------------------------------------------------------------------
+// MACROS
+//-----------------------------------------------------------------------------
 
-/** @internal Lookup Table for polynominal 0xedb88320 */
-const uint32_t CRC32LookUpTable[] =
-{
-    // note: the first number of every second row corresponds to the half-byte look-up table !
-    0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
-    0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bd1d91,
-    0x1db71064, 0x6ab020f2, 0xf3b97148, 0x84be41de, 0x1adad47d, 0x6ddde4eb, 0xf4d4b551, 0x83d385c7,
-    0x136c9856, 0x646ba8c0, 0xfd62f97a, 0x8a65c9ec, 0x14015c4f, 0x63066cd9, 0xfa0f3d63, 0x8d080df5,
-    0x3b6e20c8, 0x4c69105e, 0xd56041e4, 0xa2677172, 0x3c03e4d1, 0x4b04d447, 0xd20d85fd, 0xa50ab56b,
-    0x35b5a8fa, 0x42b2986c, 0xdbbbc9d6, 0xacbcf940, 0x32d86ce3, 0x45df5c75, 0xdcd60dcf, 0xabd13d59,
-    0x26d930ac, 0x51de003a, 0xc8d75180, 0xbfD06116, 0x21b4f4b5, 0x56b3c423, 0xcfba9599, 0xb8bda50f,
-    0x2802b89e, 0x5f058808, 0xc60dd9b2, 0xb10be924, 0x2f6f7c87, 0x58684c11, 0xc1611dab, 0xb6662d3d,
-    0x76dc4190, 0x01db7106, 0x98d220bc, 0xefd5102a, 0x71b18589, 0x06b6b51f, 0x9fbfe4a5, 0xe8b8d433,
-    0x7807c9a2, 0x0f00f934, 0x9609A88E, 0xe10e9818, 0x7f6a0dbb, 0x086d3d2d, 0x91646c97, 0xe6635c01,
-    0x6b6b51f4, 0x1c6c6162, 0x856530D8, 0xf262004e, 0x6c0695ed, 0x1b01a57b, 0x8208f4c1, 0xf50fc457,
-    0x65b0d9c6, 0x12b7e950, 0x8bbeb8ea, 0xfcb9887c, 0x62dd1ddf, 0x15da2d49, 0x8cd37cf3, 0xfbd44c65,
-    0x4db26158, 0x3ab551ce, 0xa3bc0074, 0xd4bb30e2, 0x4adfA541, 0x3dd895d7, 0xa4d1c46d, 0xd3d6f4fb,
-    0x4369e96a, 0x346ed9fc, 0xad678846, 0xda60b8d0, 0x44042D73, 0x33031de5, 0xaa0a4c5f, 0xdd0d7cc9,
-    0x5005713c, 0x270241aa, 0xbe0b1010, 0xc90c2086, 0x5768b525, 0x206f85b3, 0xb966d409, 0xce61e49f,
-    0x5edef90e, 0x29d9c998, 0xb0d09822, 0xc7d7a8b4, 0x59b33d17, 0x2eb40d81, 0xb7bd5c3b, 0xc0ba6cad,
-    0xedb88320, 0x9abfb3b6, 0x03b6e20c, 0x74b1d29a, 0xead54739, 0x9dd277af, 0x04db2615, 0x73dc1683,
-    0xe3630b12, 0x94643b84, 0x0d6d6a3e, 0x7a6a5aa8, 0xe40ecf0b, 0x9309ff9d, 0x0a00ae27, 0x7d079eb1,
-    0xf00f9344, 0x8708a3d2, 0x1e01f268, 0x6906c2fd, 0xf762575d, 0x806567cb, 0x196c3671, 0x6e6b06e7,
-    0xfed41b76, 0x89d32be0, 0x10da7a5a, 0x67dd4acc, 0xf9b9df6f, 0x8ebeeff9, 0x17b7be43, 0x60b08ed5,
-    0xd6d6a3e8, 0xa1d1937e, 0x38d8c2c4, 0x4fdff252, 0xd1bb67f1, 0xa6bc5767, 0x3fb506dd, 0x48b2364b,
-    0xd80d2bdA, 0xaf0a1b4c, 0x36034af6, 0x41047a60, 0xdf60efc3, 0xa867dF55, 0x316e8eef, 0x4669be79,
-    0xcb61b38c, 0xbc66831a, 0x256fd2a0, 0x5268e236, 0xcc0c7795, 0xbb0b4703, 0x220216b9, 0x5505262f,
-    0xc5bA3bbe, 0xb2bd0b28, 0x2bb45a92, 0x5cb36a04, 0xc2d7ffa7, 0xb5d0cf31, 0x2cd99e8b, 0x5bdeae1d,
-    0x9b64c2b0, 0xed63f226, 0x756aa39c, 0x026d930a, 0x9c0906a9, 0xeb0e363f, 0x72076785, 0x05005713,
-    0x95bf4a82, 0xe2b87a14, 0x7bb12bae, 0x0cb61b38, 0x92d28e9b, 0xe5d5be0d, 0x7cdcefb7, 0x0bdbdf21,
-    0x86d3d2d4, 0xf1d4e242, 0x68ddb3f8, 0x1fda836e, 0x81be16cd, 0xf6b9265b, 0x6fb077e1, 0x18b74777,
-    0x88085ae6, 0xff0f6a70, 0x66063bca, 0x11010b5c, 0x8f659eff, 0xf862ae69, 0x616bffd3, 0x166ccf45,
-    0xa00ae278, 0xd70dd2ee, 0x4e048354, 0x3903b3c2, 0xa7672661, 0xd06016f7, 0x4969474d, 0x3e6e77db,
-    0xaed16a4a, 0xd9d65adc, 0x40df0b66, 0x37d83bf0, 0xa9bcae53, 0xdebb9ec5, 0x47b2cf7f, 0x30b5ffe9,
-    0xbdbdf21c, 0xcabac28a, 0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf,
-    0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
+//-----------------------------------------------------------------------------
+// STRUCTURES & TYPEDEFS
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// CONSTANTS & STATIC VARIABLES
+//-----------------------------------------------------------------------------
+
+/**
+ * Lookup table for the corresponding reflective bits for the byte value.
+ */
+const uint8_t reflectedBytes[] = {
+    0x00, 0x80, 0x40, 0xC0, 0x20, 0xA0, 0x60, 0xE0, 0x10, 0x90, 0x50, 0xD0, 0x30, 0xB0, 0x70, 0xF0,
+    0x08, 0x88, 0x48, 0xC8, 0x28, 0xA8, 0x68, 0xE8, 0x18, 0x98, 0x58, 0xD8, 0x38, 0xB8, 0x78, 0xF8,
+    0x04, 0x84, 0x44, 0xC4, 0x24, 0xA4, 0x64, 0xE4, 0x14, 0x94, 0x54, 0xD4, 0x34, 0xB4, 0x74, 0xF4,
+    0x0C, 0x8C, 0x4C, 0xCC, 0x2C, 0xAC, 0x6C, 0xEC, 0x1C, 0x9C, 0x5C, 0xDC, 0x3C, 0xBC, 0x7C, 0xFC,
+    0x02, 0x82, 0x42, 0xC2, 0x22, 0xA2, 0x62, 0xE2, 0x12, 0x92, 0x52, 0xD2, 0x32, 0xB2, 0x72, 0xF2,
+    0x0A, 0x8A, 0x4A, 0xCA, 0x2A, 0xAA, 0x6A, 0xEA, 0x1A, 0x9A, 0x5A, 0xDA, 0x3A, 0xBA, 0x7A, 0xFA,
+    0x06, 0x86, 0x46, 0xC6, 0x26, 0xA6, 0x66, 0xE6, 0x16, 0x96, 0x56, 0xD6, 0x36, 0xB6, 0x76, 0xF6,
+    0x0E, 0x8E, 0x4E, 0xCE, 0x2E, 0xAE, 0x6E, 0xEE, 0x1E, 0x9E, 0x5E, 0xDE, 0x3E, 0xBE, 0x7E, 0xFE,
+    0x01, 0x81, 0x41, 0xC1, 0x21, 0xA1, 0x61, 0xE1, 0x11, 0x11, 0x51, 0xD1, 0x31, 0xB1, 0x71, 0xF1,
+    0x09, 0x89, 0x49, 0xC9, 0x29, 0xA9, 0x69, 0xE9, 0x19, 0x99, 0x59, 0xD9, 0x39, 0xB9, 0x79, 0xF9,
+    0x05, 0x85, 0x45, 0xC5, 0x25, 0xA5, 0x65, 0xE5, 0x15, 0x95, 0x55, 0xD5, 0x35, 0xB5, 0x75, 0xF5,
+    0x0D, 0x8D, 0x4D, 0xCD, 0x2D, 0xAD, 0x6D, 0xED, 0x1D, 0x9D, 0x5D, 0xDD, 0x3D, 0xBD, 0x7D, 0xFD,
+    0x03, 0x83, 0x43, 0xC3, 0x23, 0xA3, 0x63, 0xE3, 0x13, 0x93, 0x53, 0xD3, 0x33, 0xB3, 0x73, 0xF3,
+    0x0B, 0x8B, 0x4B, 0xCB, 0x2B, 0xAB, 0x6B, 0xEB, 0x1B, 0x9B, 0x5B, 0xDB, 0x3B, 0xBB, 0x7B, 0xFB,
+    0x07, 0x87, 0x47, 0xC7, 0x27, 0xA7, 0x67, 0xE7, 0x17, 0x97, 0x57, 0xD7, 0x37, 0xB7, 0x77, 0xF7,
+    0x0F, 0x8F, 0x4F, 0xCF, 0x2F, 0xAF, 0x6F, 0xEF, 0x1F, 0x9F, 0x5F, 0xDF, 0x3F, 0xBF, 0x7F, 0xFF
 };
 
-// ============================================================================
-// STRUCTURES & TYPEDEFS
-// ============================================================================
+bool CRC32::msTableInit = false;
+uint32_t CRC32::msLookup[ 256 ];
+bool CRC32C::msTableInit = false;
+uint32_t CRC32C::msLookup[ 256 ];
 
-// ============================================================================
+//-----------------------------------------------------------------------------
 // CLASSES
-// ============================================================================
+//-----------------------------------------------------------------------------
 
-// ============================================================================
+//-----------------------------------------------------------------------------
 // PROTOTYPES
-// ============================================================================
+//-----------------------------------------------------------------------------
 
-// ============================================================================
+uint32_t reflective32( uint32_t value );
+
+//-----------------------------------------------------------------------------
 // IMPLEMENTATION
-// ============================================================================
+//-----------------------------------------------------------------------------
 
-// -------------------------------------------------------------------------
-CRC32::CRC32() : HashingBase( 32 ) {
+/**
+ * @brief Returns the reflective 32-bits value of the specified value.
+ *
+ * A reflective value is a value where each bit are swapped. For example, the reflective
+ * value of 0x55 (0b01010101) is 0xAA (0b10101010), 0x87 (0b10000111) is 0xE1 (0b11100001),
+ * etc.
+ *
+ * @param value Initial 32-bits value.
+ *
+ * @return the reflective value.
+ */
+uint32_t reflective32( uint32_t value ) {
+    uint32_t tmp = 0;
+    uint32_t loBit;
+    uint32_t hiBit;
+    for( int i = 0; i < 16; i++ ) {
+        loBit = value & ( 1 << i );
+        hiBit = value & ( 1 << ( 31 - i ) );
+        tmp |= ( loBit << ( 31 - ( i * 2 ) ) );
+        tmp |= ( hiBit >> ( 31 - ( i * 2 ) ) );
+    }
+
+    return tmp;
 }
 
-CRC32::~CRC32() {
+//=== CRC32Base implementation ================================================
+
+CRC32Base::CRC32Base( uint32_t initValue, uint32_t polynomial ) : HashingBase( 32 ) {
+    mInit = initValue;
+    mPolynomial = polynomial;
 }
 
-// -------------------------------------------------------------------------
+CRC32Base::~CRC32Base( ) { }
 
-void CRC32::init() {
-    mState = 0;
-//    mPoly =  0xedb88320;
-}
+/**
+ * @brief Initializes the lookup table.
+ *
+ * @param table     Array of the lookup entries to compute. The array must have room for
+ *                  256 entries of 32-bits each.
+ */
+void CRC32Base::initLookupTable( uint32_t *table ) {
+    uint32_t remainder;
 
-// -------------------------------------------------------------------------
+    for( uint32_t n = 0; n < 256; n++ ) {
+        remainder = n;
 
-void CRC32::update( const void *data, size_t size ) {
-    uint32_t crc = ~mState; // same as state ^ 0xFFFFFFFF
-    const uint8_t *buffer = (const uint8_t *) data;
+        for( int i = 0 ; i < 8 ; i++ ) {
+            if ( remainder & 1 ) {
+                remainder = ( remainder >> 1 ) ^ mPolynomial;
+            }
+            else {
 
-    while( size != 0 ) {
-        crc = (crc >> 8) ^ CRC32LookUpTable[ (crc & 0xFF) ^ *buffer ];
-        buffer++;
-        size--;
+                remainder >>= 1;
+            }
+        }
+
+        table[ n ] = remainder;
     }
 }
 
-// -------------------------------------------------------------------------
+/**
+ * @copydoc HashingBase::init()
+ */
+void CRC32Base::init( ) {
+    mState = mInit;
+}
 
-void CRC32::finalize() {
-    mState = ~mState; // same as mState ^ 0xFFFFFFFF
+/**
+ * @brief Update the CRC32 state.
+ *
+ * @param lookupTable   Lookup table to use
+ * @param data          Data buffer use to update the current CRC.
+ * @param size          Number of bytes in <tt>data</tt>
+ */
+void CRC32Base::update( uint32_t *lookupTable, const void *data, size_t size ) {
+    uint8_t *buffer = (uint8_t *) data;
 
-    mHash[ 0 ] = (uint8_t) ( mState & 0x000000ff);
-    mHash[ 1 ] = (uint8_t) (( mState & 0x0000ff00) >> 8 );
-    mHash[ 2 ] = (uint8_t) (( mState & 0x00ff0000) >> 16 );
-    mHash[ 3 ] = (uint8_t) (( mState & 0xff000000) >> 24 );
+    while( size-- ) {
+
+        mState = lookupTable[ ( mState  ^ *buffer ) & 0xff ] ^ ( mState >> 8 );
+        buffer++;
+    }
+}
+
+/**
+ * @copydoc HashingBase::finalize()
+ */
+void CRC32Base::finalize( ) {
+
+    mHash[ 0 ] = (uint8_t) ( ( mState & 0xff000000 ) >> 24 );
+    mHash[ 1 ] = (uint8_t) ( ( mState & 0x00ff0000 ) >> 16 );
+    mHash[ 2 ] = (uint8_t) ( ( mState & 0x0000ff00 ) >> 8 );
+    mHash[ 3 ] = (uint8_t) ( mState & 0x000000ff );
 
     mState = 0;
 }
 
-// -------------------------------------------------------------------------
+//=== CRC32 implementation ====================================================
+
+CRC32::CRC32( ) : CRC32Base( 0xffffffff, reflective32( 0x04c11db7 ) ) {
+    if( ! CRC32::msTableInit ) {
+        // Initialize the lookup table using the reverse polynomial of 0x04c11db7
+
+        initLookupTable( CRC32::msLookup );
+        CRC32::msTableInit = true;
+    }
+}
+
+CRC32::~CRC32( ) { }
+
+/**
+ * @copydoc HashingBase::update( const void *, size_t )
+ */
+void CRC32::update( const void *data, size_t size ) {
+
+    //    mState = ~mState;   // Same as mState ^ 0xffffffff
+    CRC32Base::update( CRC32::msLookup, data, size );
+    //    mState = ~mState;   // Same as crc ^ 0xffffffff;
+}
+
+void CRC32::finalize( ) {
+    mState = ~mState;  // Same as mState ^ 0xffffffff;
+    CRC32Base::finalize( );
+}
 
 /**
  * Creates a new CRC-32 handler.
  *
- * @return pointer to the newly created CRC-32 handler or <tt>null</tt> on 
- *         error.
+ * @return pointer to the newly created CRC-32 handler or <tt>null</tt> on error.
  */
-void* hash_crc32_create() {
-    return new CRC32();
-}
+void* hash_crc32_create( ) {
 
-// -------------------------------------------------------------------------
+    return new CRC32( );
+}
 
 /**
  * @brief Initializes the specified CRC-32 handler.
  *
- * This function prepares the CRC-32 handler for hashing data. It must be called
- * prior the first {@link hash_md5_update} or {@link hash_crc-32_final} calls.
+ * This function prepares the CRC-32 handler for hashing data. It must be called prior the
+ * first {@link hash_crc32_update} or {@link hash_crc32_final} calls.
  *
  * @param h Pointer to a valid CRC-32 handler. Cannot be <tt>NULL</tt>.
  *
@@ -147,25 +238,24 @@ void* hash_crc32_create() {
  */
 int hash_crc32_init( void *h ) {
     int rc = 0;
-    CRC32 *md5 = dynamic_cast<CRC32 *> ( (HashingBase *) h );
+    CRC32 *crc = dynamic_cast<CRC32 *> ( (HashingBase *) h );
 
-    if(  md5 != NULL ) {
-        md5->init();
+    if(  crc != NULL ) {
+
+        crc->init( );
         rc = 1;
     }
 
     return rc;
 }
 
-// -------------------------------------------------------------------------
-
 /**
  * @brief Updates the specified CRC-32 handler's state with the data.
  *
- * This function updates the CRC-32 handler's state by hashing data. It must be
- * called after {@link hash_crc32_init} and before {@link hash_crc32_final}. The
- * result of calling this function before {@link hash_crc32_init} or after
- * {@link hash_crc32_final} is undefined.
+ * This function updates the CRC-32 handler's state by hashing data. It must be called
+ * after {@link hash_crc32_init} and before {@link hash_crc32_final}. The result of
+ * calling this function before {@link hash_crc32_init} or after {@link hash_crc32_final}
+ * is undefined.
  *
  * @param h   Pointer to a valid CRC-32 handler. Cannot be <tt>NULL</tt>.
  * @param buf Pointer to a set of data to hash.
@@ -175,23 +265,23 @@ int hash_crc32_init( void *h ) {
  */
 int hash_crc32_update( void *h, void *buf, size_t len ) {
     int rc = 0;
-    CRC32 *md5 = dynamic_cast<CRC32 *> ( (HashingBase *) h );
+    CRC32 *crc = dynamic_cast<CRC32 *> ( (HashingBase *) h );
 
-    if(  md5 != NULL ) {
-        md5->update( buf, len );
+    if(  crc != NULL ) {
+
+        crc->update( buf, len );
         rc = 1;
     }
 
     return rc;
 }
 
-// -------------------------------------------------------------------------
 /**
  * @brief Finalizes the specified CRC-32 handler's state.
  *
- * This function finalizes the CRC-32 handler's state and returns the hashing
- * value. It must be called after {@link hash_crc32_init} The result of calling
- * this function before {@link hash_crc32_init} is undefined.
+ * This function finalizes the CRC-32 handler's state and returns the hashing value. It
+ * must be called after {@link hash_crc32_init} The result of calling this function before
+ * {@link hash_crc32_init} is undefined.
  *
  * @param h   Pointer to a valid CRC-32 handler. Cannot be <tt>NULL</tt>.
  * @param buf Pointer to buffer to receive the calculated hash value.
@@ -201,28 +291,26 @@ int hash_crc32_update( void *h, void *buf, size_t len ) {
  */
 int hash_crc32_finalize( void *h ) {
     int rc = 0;
-    CRC32 *md5 = dynamic_cast<CRC32 *> ( (HashingBase *) h );
+    CRC32 *crc = dynamic_cast<CRC32 *> ( (HashingBase *) h );
 
-    if(  md5 != NULL ) {
+    if(  crc != NULL ) {
+
         rc = 1;
-        md5->finalize();
+        crc->finalize( );
     }
 
     return rc;
 }
 
-// -------------------------------------------------------------------------
-
 /**
- * @brief Retrieves the hashing value after the last 
- *        <tt>hash_crc32_finalize</tt> function call.
+ * @brief Retrieves the hashing value after the last  <tt>hash_crc32_finalize</tt>
+ * function call.
  *
- * The result of calling this method prior to the {@link hash_crc32_finalize}
- * method is undefined. If the memory buffer is smaller than the hash size, only
- * the higher part of the hash value is returned.
+ * The result of calling this method prior to the {@link hash_crc32_finalize} method is
+ * undefined. If the memory buffer is smaller than the hash size, only the higher part of
+ * the hash value is returned.
  *
- * If <tt>h</tt> is not a valid CRC-32 handler, the function returns 
- * immediately. 
+ * If <tt>h</tt> is not a valid CRC-32 handler, the function returns immediately.
  *
  * @param h    Pointer to a valid CRC-32 handler.
  * @param buf  Memory buffer to receive the hashing result.
@@ -232,16 +320,15 @@ int hash_crc32_finalize( void *h ) {
  */
 int hash_crc32_get_value( void *h, uint8_t *buf, size_t len ) {
     int rc = 0;
-    CRC32 *md5 = dynamic_cast<CRC32 *> ( (HashingBase *) h );
+    CRC32 *crc = dynamic_cast<CRC32 *> ( (HashingBase *) h );
 
-    if(  md5 != NULL ) {
-        rc = md5->getValue( buf, len );
+    if(  crc != NULL ) {
+
+        rc = crc->getValue( buf, len );
     }
 
     return rc;
 }
-
-// -------------------------------------------------------------------------
 
 /**
  * Destroys an existing CRC-32 handler.
@@ -252,14 +339,173 @@ int hash_crc32_get_value( void *h, uint8_t *buf, size_t len ) {
  */
 int hash_crc32_destroy( void *h ) {
     int rc = 0;
-    CRC32 *md5 = dynamic_cast<CRC32 *> ( (HashingBase *) h );
+    CRC32 *crc = dynamic_cast<CRC32 *> ( (HashingBase *) h );
 
-    if(  md5 != NULL ) {
+    if(  crc != NULL ) {
+
         rc = 1;
-        delete md5;
+        delete crc;
     }
 
     return rc;
 }
 
+//=== CRC32C implementation ===================================================
+
+CRC32C::CRC32C( ) : CRC32Base( 0xffffffff, reflective32( 0x1edc6f41 ) ) {
+    if( ! CRC32C::msTableInit ) {
+
+        // Initialize the lookup table using the reverse polynomial of 0x1edc6f41
+        initLookupTable( CRC32C::msLookup  );
+        CRC32C::msTableInit = true;
+    }
+}
+
+CRC32C::~CRC32C( ) { }
+
+/**
+ * @copydoc HashingBase::update( const void *, size_t )
+ */
+void CRC32C::update( const void *data, size_t size ) {
+
+    CRC32Base::update( CRC32C::msLookup, data, size );
+}
+
+void CRC32C::finalize( ) {
+    mState = ~mState;  // Same as mState ^ 0xffffffff;
+    CRC32Base::finalize( );
+}
+
+/**
+ * Creates a new CRC-32C handler.
+ *
+ * @return pointer to the newly created CRC-32C handler or <tt>null</tt> on error.
+ */
+void* hash_crc32c_create( ) {
+
+    return new CRC32C( );
+}
+
+/**
+ * @brief Initializes the specified CRC-32C handler.
+ *
+ * This function prepares the CRC-32C handler for hashing data. It must be called prior the
+ * first {@link hash_crc32c_update} or {@link hash_crc32c_final} calls.
+ *
+ * @param h Pointer to a valid CRC-32C handler. Cannot be <tt>NULL</tt>.
+ *
+ * @return a non-zero value on success or 0 if <tt>h</tt> is not valid.
+ */
+int hash_crc32c_init( void *h ) {
+    int rc = 0;
+    CRC32C *crc = dynamic_cast<CRC32C *> ( (CRC32Base *) h );
+
+    if(  crc != NULL ) {
+
+        crc->init( );
+        rc = 1;
+    }
+
+    return rc;
+}
+
+/**
+ * @brief Updates the specified CRC-32C handler's state with the data.
+ *
+ * This function updates the CRC-32C handler's state by hashing data. It must be called
+ * after {@link hash_crc32c_init} and before {@link hash_crc32c_final}. The result of
+ * calling this function before {@link hash_crc32c_init} or after {@link hash_crc32c_final}
+ * is undefined.
+ *
+ * @param h   Pointer to a valid CRC-32C handler. Cannot be <tt>NULL</tt>.
+ * @param buf Pointer to a set of data to hash.
+ * @param len Number of bytes in <tt>buf</tt> to hash.
+ *
+ * @return a non-zero value on success or 0 if <tt>h</tt> is not valid.
+ */
+int hash_crc32c_update( void *h, void *buf, size_t len ) {
+    int rc = 0;
+    CRC32C *crc = dynamic_cast<CRC32C *> ( (CRC32Base *) h );
+
+    if(  crc != NULL ) {
+
+        crc->update( buf, len );
+        rc = 1;
+    }
+
+    return rc;
+}
+
+/**
+ * @brief Finalizes the specified CRC-32C handler's state.
+ *
+ * This function finalizes the CRC-32C handler's state and returns the hashing value. It
+ * must be called after {@link hash_crc32c_init} The result of calling this function before
+ * {@link hash_crc32c_init} is undefined.
+ *
+ * @param h   Pointer to a valid CRC-32C handler. Cannot be <tt>NULL</tt>.
+ * @param buf Pointer to buffer to receive the calculated hash value.
+ * @param len Number of bytes in <tt>buf</tt>.
+ *
+ * @return a non-zero value on success or 0 if <tt>h</tt> is not valid.
+ */
+int hash_crc32c_finalize( void *h ) {
+    int rc = 0;
+    CRC32C *crc = dynamic_cast<CRC32C *> ( (CRC32Base *) h );
+
+    if(  crc != NULL ) {
+
+        rc = 1;
+        crc->finalize( );
+    }
+
+    return rc;
+}
+
+/**
+ * @brief Retrieves the hashing value after the last  <tt>hash_crc32c_finalize</tt>
+ * function call.
+ *
+ * The result of calling this method prior to the {@link hash_crc32c_finalize} method is
+ * undefined. If the memory buffer is smaller than the hash size, only the higher part of
+ * the hash value is returned.
+ *
+ * If <tt>h</tt> is not a valid CRC-32C handler, the function returns immediately.
+ *
+ * @param h    Pointer to a valid CRC-32C handler.
+ * @param buf  Memory buffer to receive the hashing result.
+ * @param size Size of the memory buffer in bytes.
+ *
+ * @return the number of bytes copied into <tt>buf</tt>.
+ */
+int hash_crc32c_get_value( void *h, uint8_t *buf, size_t len ) {
+    int rc = 0;
+    CRC32C *crc = dynamic_cast<CRC32C *> ( (CRC32Base *) h );
+
+    if(  crc != NULL ) {
+
+        rc = crc->getValue( buf, len );
+    }
+
+    return rc;
+}
+
+/**
+ * Destroys an existing CRC-32C handler.
+ *
+ * @param h Pointer to a valid CRC-32C handler. Cannot be <tt>NULL</tt>.
+ *
+ * @return a non-zero value on success or 0 on error.
+ */
+int hash_crc32c_destroy( void *h ) {
+    int rc = 0;
+    CRC32C *crc = dynamic_cast<CRC32C *> ( (CRC32Base *) h );
+
+    if(  crc != NULL ) {
+        rc = 1;
+        delete crc;
+    }
+
+    return rc;
+}
 // EOF: crc32.cpp

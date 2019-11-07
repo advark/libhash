@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>include/libhash/crc32.h</itemPath>
+      <itemPath>include/libhash/defs.h</itemPath>
+      <itemPath>include/libhash/hashbase.h</itemPath>
+      <itemPath>include/libhash/libhash.h</itemPath>
+      <itemPath>include/libhash/md5.h</itemPath>
+      <itemPath>include/libhash/sha1.h</itemPath>
+      <itemPath>include/libhash/sha2.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>src/crc32.cpp</itemPath>
+      <itemPath>src/hashbase.cpp</itemPath>
+      <itemPath>src/md5.cpp</itemPath>
+      <itemPath>src/sha1.cpp</itemPath>
+      <itemPath>src/sha2.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+      <logicalFolder name="f2"
+                     displayName="libHashTest"
+                     projectFiles="true"
+                     kind="TEST">
+        <itemPath>tests/CRC32Tests.cpp</itemPath>
+        <itemPath>tests/MD5Tests.cpp</itemPath>
+        <itemPath>tests/SHA1Tests.cpp</itemPath>
+        <itemPath>tests/SHA2Tests.cpp</itemPath>
+        <itemPath>tests/libHashTest.cpp</itemPath>
+        <itemPath>tests/libHashTestCases.cpp</itemPath>
+        <itemPath>tests/libHashTestCases.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+      <itemPath>README.md</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>include/libhash</Elem>
+    <Elem>src</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+      </compileType>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <ccTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <commandLine>-lcppunit</commandLine>
+        </linkerTool>
+      </folder>
+      <item path="include/libhash/crc32.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/defs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/hashbase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/libhash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/sha1.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/sha2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/crc32.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/hashbase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/md5.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/sha1.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/sha2.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/CRC32Tests.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool>
+          <incDir>
+            <pElem>../include</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="tests/MD5Tests.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool>
+          <incDir>
+            <pElem>../include</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="tests/SHA1Tests.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool>
+          <incDir>
+            <pElem>../include</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="tests/SHA2Tests.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool>
+          <incDir>
+            <pElem>../include</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="tests/libHashTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/libHashTestCases.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool>
+          <incDir>
+            <pElem>../include</pElem>
+          </incDir>
+        </ccTool>
+      </item>
+      <item path="tests/libHashTestCases.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <folder path="TestFiles/f2">
+        <cTool>
+          <commandLine>`cppunit-config --cflags`</commandLine>
+        </cTool>
+        <linkerTool>
+          <output>${TESTDIR}/TestFiles/f2</output>
+          <commandLine>-lcppunit</commandLine>
+        </linkerTool>
+      </folder>
+      <item path="include/libhash/crc32.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/defs.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/hashbase.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/libhash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/md5.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/sha1.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/libhash/sha2.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/crc32.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/hashbase.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/md5.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/sha1.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/sha2.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/CRC32Tests.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/MD5Tests.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/SHA1Tests.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/SHA2Tests.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/libHashTest.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/libHashTestCases.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="tests/libHashTestCases.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
