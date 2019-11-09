@@ -121,6 +121,9 @@ void SHA2_224::init( ) {
     mState[ 5 ] = 0x68581511;
     mState[ 6 ] = 0x64f98fa7;
     mState[ 7 ] = 0xbefa4fa4;
+
+    mBitCount = 0;
+    mIndex = 0;
 }
 
 void SHA2_224::finalize( ) {
@@ -223,7 +226,7 @@ void SHA2_256::init( ) {
 }
 
 void SHA2_256::update( const void *data, size_t size ) {
-    uint32_t i;
+    size_t i;
 
     // Update number of bits
     mBitCount += size << 3;
@@ -439,6 +442,10 @@ void SHA2_384::init( ) {
     mState[ 5 ] = 0x8eb44a8768581511L;
     mState[ 6 ] = 0xdb0c2e0d64f98fa7L;
     mState[ 7 ] = 0x47b5481dbefa4fa4L;
+
+    mBitCount[ 0 ] = 0;
+    mBitCount[ 1 ] = 0;
+    mIndex = 0;
 }
 
 void SHA2_384::finalize( ) {
@@ -545,7 +552,7 @@ void SHA2_512::init( ) {
 }
 
 void SHA2_512::update( const void *data, size_t size ) {
-    uint32_t i;
+    size_t i;
 
     // Update number of bits
     mBitCount[ 0 ] += ( ( size & 0xffffffff00000000L ) >> 29 );
