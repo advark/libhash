@@ -190,10 +190,14 @@ void CRC32Base::finalize( ) {
 
 //=== CRC32 implementation ====================================================
 
+/**
+ * @brief Constructor
+ *
+ * Initializes the CRC with the polynomial 0x04c11db7.
+ */
 CRC32::CRC32( ) : CRC32Base( 0xffffffff, reflective32( 0x04c11db7 ) ) {
     if( ! CRC32::msTableInit ) {
-        // Initialize the lookup table using the reverse polynomial of 0x04c11db7
-
+        // Initialize the lookup
         initLookupTable( CRC32::msLookup );
         CRC32::msTableInit = true;
     }
@@ -205,10 +209,7 @@ CRC32::~CRC32( ) { }
  * @copydoc HashingBase::update( const void *, size_t )
  */
 void CRC32::update( const void *data, size_t size ) {
-
-    //    mState = ~mState;   // Same as mState ^ 0xffffffff
     CRC32Base::update( CRC32::msLookup, data, size );
-    //    mState = ~mState;   // Same as crc ^ 0xffffffff;
 }
 
 void CRC32::finalize( ) {
@@ -352,10 +353,14 @@ int hash_crc32_destroy( void *h ) {
 
 //=== CRC32C implementation ===================================================
 
+/**
+ * @brief Constructor
+ *
+ * Initializes the CRC with the polynomial 0x1edc6f41.
+ */
 CRC32C::CRC32C( ) : CRC32Base( 0xffffffff, reflective32( 0x1edc6f41 ) ) {
     if( ! CRC32C::msTableInit ) {
-
-        // Initialize the lookup table using the reverse polynomial of 0x1edc6f41
+        // Initialize the lookup table.
         initLookupTable( CRC32C::msLookup  );
         CRC32C::msTableInit = true;
     }
@@ -367,7 +372,6 @@ CRC32C::~CRC32C( ) { }
  * @copydoc HashingBase::update( const void *, size_t )
  */
 void CRC32C::update( const void *data, size_t size ) {
-
     CRC32Base::update( CRC32C::msLookup, data, size );
 }
 
