@@ -36,6 +36,7 @@
 
 #    include <libhash/defs.h>
 #    include <libhash/hashbase.h>
+#    include <libhash/crc16.h>
 #    include <libhash/crc32.h>
 #    include <libhash/md5.h>
 #    include <libhash/sha1.h>
