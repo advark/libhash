@@ -85,7 +85,14 @@ private:
 } ; // class CRC32Base
 
 /**
- * @brief CRC32 algorithm as defined by RFC-1952. It provides a 32-bits hash fingerprint.
+ * @brief CRC32 algorithm as defined by RFC-1952.
+ *
+ * It provides a 32-bits hash fingerprint.
+ *
+ * Note: The first time a CRC-32 object is created, the constructor also builds the lookup
+ * table so the it will take a little more as the  subsequent object creation. The main
+ * reason is to avoid using memory that will not be needed if the class is not used. 1KB
+ * may seems ridiculus on modern computer but may have huge impact on embedded systems.
  *
  * @author Yanick Poirier (2017/03/20)
  *
@@ -112,7 +119,12 @@ private:
  * @brief A CRC32-C implementation.
  *
  * CRC32-C is becoming more popular because of its hardware implementation on some Intel's
- * processor. This class does not use the hardware features of those processor.
+ * processor. This class does not use the hardware features of those processors.
+ *
+ * Note: The first time a CRC-32 object is created, the constructor also builds the lookup
+ * table so the it will take a little more as the  subsequent object creation. The main
+ * reason is to avoid using memory that will not be needed if the class is not used. 1KB
+ * may seems ridiculus on modern computer but may have huge impact on embedded systems.
  *
  * @author Yanick Poirier (2019/11/02)
  *
