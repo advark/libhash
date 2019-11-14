@@ -51,45 +51,39 @@ namespace libhash {
 
 /**
  * This class implements the SHA-2 256-bits Secure Hash Algorithm as defined in the
- * Federal Information Processing Standards Publication 180-2 (FIPS 180-2) release August 1st,
- *  2002.
+ * Federal Information Processing Standards Publication 180-2 (FIPS 180-2) released on
+ * August 1st, 2002.
  *
  * @author Yanick Poirier (2017/01/25)
  */
 class LIBHASH_API SHA2_256 : public HashingBase {
 public:
 
+    /**
+     * Constructor.
+     */
     SHA2_256( ) : HashingBase( 256 ) { }
 
+    /**
+     * Destructor.
+     */
     virtual ~SHA2_256( ) { }
 
-    /**
-     * @copydoc HashingBase::init()
-     */
     virtual void init( );
-
-    /**
-     * @copydoc HashingBase::update( const void *, size_t )
-     */
     virtual void update( const void *data, size_t size );
-
-    /**
-     * @copydoc HashingBase::finalize()
-     */
     virtual void finalize( );
 
 protected:
 
+    /**
+     * Constructor for SHA2-256 drived classes.
+     *
+     * @param bits Size in bits of the hash value.
+     */
     SHA2_256( size_t bits ) : HashingBase( bits ) { }
 
-    /** @copydoc */
     void transform( );
-
     void pad( );
-
-    /**
-     * Clears internal data after finalization.
-     */
     void clear( );
 
     /** Current digest state. */
@@ -114,18 +108,17 @@ protected:
 class LIBHASH_API SHA2_224 : public SHA2_256 {
 public:
 
+    /**
+     * Constructor.
+     */
     SHA2_224( ) : SHA2_256( 224 ) { }
 
+    /**
+     * Destructor.
+     */
     virtual ~SHA2_224( ) { }
 
-    /**
-     * @copydoc HashingBase::init()
-     */
     virtual void init( );
-
-    /**
-     * @copydoc HashingBase::finalize()
-     */
     virtual void finalize( );
 
 protected:
@@ -142,33 +135,31 @@ protected:
 class LIBHASH_API SHA2_512 : public HashingBase {
 public:
 
+    /**
+     * Constructor.
+     */
     SHA2_512( ) : HashingBase( 512 ) { }
 
+    /**
+     * Destructor.
+     */
     virtual ~SHA2_512( ) { }
 
-    /**
-     * @copydoc HashingBase::init()
-     */
     virtual void init( );
-
-    /**
-     * @copydoc HashingBase::update( const void *, size_t )
-     */
     virtual void update( const void *data, size_t size );
-
-    /**
-     * @copydoc HashingBase::finalize()
-     */
     virtual void finalize( );
 
 protected:
 
+    /**
+     * Constructor for SHA2-512 derived classes.
+     *
+     * @param bits Size in bits of the hash value.
+     */
     SHA2_512( size_t bits ) : HashingBase( bits ) { }
 
     void transform( );
-
     void pad( );
-
     void clear( );
 
     /** Current digest state. */
@@ -194,18 +185,17 @@ protected:
 class LIBHASH_API SHA2_384 : public SHA2_512 {
 public:
 
+    /**
+     * Constructor.
+     */
     SHA2_384( ) : SHA2_512( 384 ) { }
 
+    /**
+     * Destructor.
+     */
     virtual ~SHA2_384( ) { }
 
-    /**
-     * @copydoc HashingBase::init()
-     */
     virtual void init( );
-
-    /**
-     * @copydoc HashingBase::finalize()
-     */
     virtual void finalize( );
 
 protected:

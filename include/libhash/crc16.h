@@ -93,9 +93,6 @@ private:
     uint16_t mInit;
     uint16_t mPolynomial;
     uint16_t mXorValue;
-    bool mInReflection;
-    bool mOutReflection;
-
 } ; // class CRC32Base
 
 /**

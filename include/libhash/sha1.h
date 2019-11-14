@@ -67,30 +67,15 @@ public:
     SHA1( ) : HashingBase( 160 ) { }
 
     /**
-     * Desctructor.
+     * Destructor.
      */
     virtual ~SHA1( ) { }
 
-    /**
-     * @copydoc HashingBase::init()
-     */
     virtual void init( );
-
-    /**
-     * @copydoc HashingBase::update( const void *, lhUInt32 )
-     */
     virtual void update( const void *data, size_t size );
-
-    /**
-     * @copydoc HashingBase::finalize()
-     */
     virtual void finalize( );
 
 protected:
-
-    /**
-     * Executes the SHA-1 transformation rounds.
-     */
     void transform( );
 
 private:

@@ -34,6 +34,9 @@
 // HEADER FILES
 //-----------------------------------------------------------------------------
 
+#    include <stdint.h>
+#    include <stdlib.h>
+
 #    include <libhash/defs.h>
 #    include <libhash/hashbase.h>
 #    include <libhash/crc16.h>

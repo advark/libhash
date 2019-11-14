@@ -34,7 +34,6 @@
 //-----------------------------------------------------------------------------
 
 #    include <stdint.h>
-#    include <stdlib.h>
 
 //-----------------------------------------------------------------------------
 // CONSTANTS & MACROS
@@ -69,14 +68,6 @@ namespace libhash {
  */
 class LIBHASH_API HashingBase {
 public:
-    /**
-     * Constructs a hashing object. Upon its construction, the hashing object is not
-     * considered initialized for hashing computation yet.
-     *
-     * @param size Number of bits of the resulting hashing algorithm.
-     */
-    HashingBase( size_t size );
-
     /**
      * Destructor.
      */
@@ -152,6 +143,14 @@ public:
     int getValue( uint8_t *buffer, size_t size );
 
 protected:
+    /**
+     * Constructs a hashing object. Upon its construction, the hashing object is not
+     * considered initialized for hashing computation yet.
+     *
+     * @param size Number of bits of the resulting hashing algorithm.
+     */
+    HashingBase( size_t size );
+
 
     /** Last calculated hash value. */
     uint8_t *mHash;
@@ -161,6 +160,124 @@ private:
     size_t mBits;
 
 } ; // class HashingBase
+
+/**
+ * This is the base class for Cyclic Redundency Check algorithms
+ */
+class LIBHASH_API CRCBase : public HashingBase {
+public:
+
+    virtual ~CRCBase( ) { }
+
+    inline bool isInputReflected( ) {
+        return mInReflection;
+    }
+
+    inline bool isOutputReflected( ) {
+        return mOutReflection;
+    }
+
+
+protected:
+
+    /**
+     *
+     * @param size          Number of bits of the resulting CRC algorithm.
+     * @param inReflect     Input reflection flag. If <tt>true</tt>, the input data is
+     *                      reflected before use.
+     * @param outReflect    Output reflection flag. If <tt>true</tt>, the output value is
+     *                      reflected.
+     */
+    CRCBase( size_t size, bool inReflect, bool outReflect ) : HashingBase( size ) {
+        mInReflection = inReflect;
+        mOutReflection = outReflect;
+    };
+
+    /**
+     * @brief Returns the reflected 32-bits value of the specified value.
+     *
+     * A reflected value is a value where each bit are swapped. For example, the reflected
+     * value of 0x55 (0b01010101) is 0xAA (0b10101010), 0x87 (0b10000111) is 0xE1
+     * (0b11100001), etc.
+     *
+     * @param value Initial 32-bits value.
+     *
+     * @return the reflected value.
+     */
+    inline uint32_t reflect( uint32_t value ) {
+        uint32_t tmp = 0;
+        uint32_t loBit;
+        uint32_t hiBit;
+        for( int i = 0; i < 16; i++ ) {
+            loBit = value & ( 1 << i );
+            hiBit = value & ( 1 << ( 31 - i ) );
+            tmp |= ( loBit << ( 31 - ( i * 2 ) ) );
+            tmp |= ( hiBit >> ( 31 - ( i * 2 ) ) );
+        }
+
+        return tmp;
+    }
+
+    /**
+     * @brief Returns the reflected 16-bits value of the specified value.
+     *
+     * A reflected value is a value where each bit are swapped. For example, the reflected
+     * value of 0x55 (0b01010101) is 0xAA (0b10101010), 0x87 (0b10000111) is 0xE1
+     * (0b11100001), etc.
+     *
+     * @param value Initial 16-bits value.
+     *
+     * @return the reflected value.
+     */
+    inline uint16_t reflect( uint16_t value ) {
+        uint16_t tmp = 0;
+        uint16_t loBit;
+        uint16_t hiBit;
+
+        for( int i = 0; i < 8; i++ ) {
+            loBit = value & ( 1 << i );
+            hiBit = value & ( 1 << ( 15 - i ) );
+            if( loBit ) {
+                tmp |= ( loBit << ( 15 - ( i * 2 ) ) );
+            }
+            if( hiBit ) {
+                tmp |= ( hiBit >> ( 15 - ( i * 2 ) ) );
+            }
+        }
+
+        return tmp;
+    }
+
+    /**
+     * @brief Returns the reflected 8-bits value of the specified value.
+     *
+     * A reflected value is a value where each bit are swapped. For example, the reflected
+     * value of 0x55 (0b01010101) is 0xAA (0b10101010), 0x87 (0b10000111) is 0xE1
+     * (0b11100001), etc.
+     *
+     * @param value Initial 8-bits value.
+     *
+     * @return the reflected value.
+     */
+    inline uint8_t reflect( uint8_t value ) {
+        uint8_t tmp = 0;
+        uint8_t loBit;
+        uint8_t hiBit;
+        for( int i = 0; i < 4; i++ ) {
+            loBit = value & ( 1 << i );
+            hiBit = value & ( 1 << ( 7 - i ) );
+            tmp |= ( loBit << ( 7 - ( i * 2 ) ) );
+            tmp |= ( hiBit >> ( 7 - ( i * 2 ) ) );
+        }
+
+        return tmp;
+    }
+
+private:
+    bool    mInReflection;
+    bool    mOutReflection;
+
+} ; // class CRCBase
 
 };  // namespace libhash
 #    endif  // __cplusplus
