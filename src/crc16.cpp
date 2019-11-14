@@ -30,6 +30,7 @@
 // HEADER FILES
 //-----------------------------------------------------------------------------
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../include/libhash/defs.h"
@@ -92,8 +93,8 @@ CRC16Base::CRC16Base( uint16_t initValue,
     mInit = initValue;
     mPolynomial = polynomial;
     mXorValue = xorValue;
-    mInReflection = inReflect;
-    mOutReflection = outReflect;
+    //    mInReflection = inReflect;
+    //    mOutReflection = outReflect;
 }
 
 #include <stdio.h>

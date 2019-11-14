@@ -56,7 +56,6 @@ using namespace libhash;
 #define Sha512sigma0( x )    ( ROTR( (x),  1, 64 ) ^ ROTR( (x),  8, 64 ) ^ ( (x) >> 7 ))
 #define Sha512sigma1( x )    ( ROTR( (x), 19, 64 ) ^ ROTR( (x), 61, 64 ) ^ ( (x) >> 6 ))
 
-
 // SHA2-256 constants
 const uint32_t KSha256[64] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -111,6 +110,9 @@ const uint64_t KSha512[80] = {
 
 //=== SHA-224 implementation ==================================================
 
+/**
+ * @copydoc HashingBase::init()
+ */
 void SHA2_224::init( ) {
     // Initial context state
     mState[ 0 ] = 0xc1059ed8;
@@ -126,6 +128,9 @@ void SHA2_224::init( ) {
     mIndex = 0;
 }
 
+/**
+ * @copydoc HashingBase::finalize()
+ */
 void SHA2_224::finalize( ) {
     int32_t i;
 
@@ -210,6 +215,9 @@ int hash_sha2_224_destroy( void *h ) {
 
 //=== SHA-256 implementation ==================================================
 
+/**
+ * @copydoc HashingBase::init()
+ */
 void SHA2_256::init( ) {
     // Initial context state
     mState[ 0 ] = 0x6a09e667;
@@ -225,6 +233,9 @@ void SHA2_256::init( ) {
     mIndex = 0;
 }
 
+/**
+ * @copydoc HashingBase::update( const void *, size_t )
+ */
 void SHA2_256::update( const void *data, size_t size ) {
     size_t i;
 
@@ -285,6 +296,9 @@ void SHA2_256::pad( ) {
     transform( );
 }
 
+/**
+ * @copydoc HashingBase::finalize()
+ */
 void SHA2_256::finalize( ) {
     int32_t i;
 
@@ -304,6 +318,9 @@ void SHA2_256::finalize( ) {
     clear( );
 }
 
+/**
+ * Clears internal data after finalization.
+ */
 void SHA2_256::clear( ) {
     ::memset( mState, 0, sizeof ( mState ) );
     ::memset( mBlock, 0, sizeof ( mBlock ) );
@@ -311,6 +328,9 @@ void SHA2_256::clear( ) {
     mBitCount = 0;
 }
 
+/**
+ * Transformation rounds.
+ */
 void SHA2_256::transform( ) {
     uint32_t tmp1, tmp2;
     uint32_t W[64];
@@ -432,6 +452,9 @@ int hash_sha2_256_destroy( void *h ) {
 
 //=== SHA-384 implementation ==================================================
 
+/**
+ * @copydoc HashingBase::init()
+ */
 void SHA2_384::init( ) {
     // Initial context state
     mState[ 0 ] = 0xcbbb9d5dc1059ed8L;
@@ -448,6 +471,9 @@ void SHA2_384::init( ) {
     mIndex = 0;
 }
 
+/**
+ * @copydoc HashingBase::finalize()
+ */
 void SHA2_384::finalize( ) {
     int32_t i;
 
@@ -535,6 +561,9 @@ int hash_sha2_384_destroy( void *h ) {
 
 //=== SHA-512 implementation ==================================================
 
+/**
+ * @copydoc HashingBase::init()
+ */
 void SHA2_512::init( ) {
     // Initial context state
     mState[ 0 ] = 0x6a09e667f3bcc908L;
@@ -623,6 +652,9 @@ void SHA2_512::pad( ) {
     transform( );
 }
 
+/**
+ * @copydoc HashingBase::finalize()
+ */
 void SHA2_512::finalize( ) {
     int32_t i;
 
@@ -646,6 +678,9 @@ void SHA2_512::finalize( ) {
     clear( );
 }
 
+/**
+ * Clears internal data after finalization.
+ */
 void SHA2_512::clear( ) {
     ::memset( mBlock, 0, sizeof ( mBlock ) );
     ::memset( mBitCount, 0, sizeof ( mBitCount ) );
@@ -653,6 +688,9 @@ void SHA2_512::clear( ) {
     mIndex = 0;
 }
 
+/**
+ * Transformation rounds.
+ */
 void SHA2_512::transform( ) {
     uint64_t tmp1, tmp2;
     uint64_t  W[80];

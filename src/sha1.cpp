@@ -42,10 +42,8 @@ using namespace libhash;
 // CONSTANTS & MACROS
 //-----------------------------------------------------------------------------
 
-// Helper macro functions for SHA transformation
-#define CH( x, y, z )           (( (x) & (y) ) ^ ((~(x)) & (z)))
-#define PARITY( x, y, z )       ( (x) ^ (y) ^ (z) )
-#define MAJ( x, y, z )          (( (x) & (y) ) ^ ( (x) & (z) ) ^ ( (y) & (z) ))
+// SHA-1 constants
+uint32_t KSha1[]   = { 0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6 };
 
 //-----------------------------------------------------------------------------
 // STRUCTURES & TYPEDEFS
@@ -63,9 +61,23 @@ using namespace libhash;
 // IMPLEMENTATION
 //-----------------------------------------------------------------------------
 
-// SHA-1 constants
-uint32_t KSha1[]   = { 0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6 };
+inline uint32_t CH( uint32_t x, uint32_t y, uint32_t z ) {
+    return ( x & y ) ^ ( ~x & z );
+}
 
+inline uint32_t PARITY( uint32_t x, uint32_t y, uint32_t z ) {
+    return x ^ y ^ z;
+}
+
+inline uint32_t MAJ( uint32_t x, uint32_t y, uint32_t z ) {
+    return ( x & y ) ^ ( x & z ) ^ ( y & z );
+}
+
+//=== SHA-1 implementation ====================================================
+
+/**
+ * @copydoc HashingBase::init()
+ */
 void SHA1::init( ) {
     // Initial state values
     mState[ 0 ] = 0x67452301;
@@ -78,6 +90,9 @@ void SHA1::init( ) {
     mIndex = 0;
 }
 
+/**
+ * @copydoc HashingBase::update( const void *, lhUInt32 )
+ */
 void SHA1::update( const void *data, size_t size ) {
     uint32_t i;
 
@@ -93,6 +108,9 @@ void SHA1::update( const void *data, size_t size ) {
     }
 }
 
+/**
+ * @copydoc HashingBase::finalize()
+ */
 void SHA1::finalize( ) {
     if( mIndex > 55 ) {
         if( mIndex < 64 ) {
@@ -150,6 +168,9 @@ void SHA1::finalize( ) {
     mBitCount = 0;
 }
 
+/**
+ * Executes the SHA-1 transformation rounds.
+ */
 void SHA1::transform( ) {
     uint32_t tmp;
     uint32_t W[80];

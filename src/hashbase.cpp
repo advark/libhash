@@ -30,6 +30,7 @@
 // HEADER FILES
 //-----------------------------------------------------------------------------
 
+#include <stdint.h>
 #include <stdlib.h>
 #include "../include/libhash/defs.h"
 #include "../include/libhash/hashbase.h"
