@@ -66,4 +66,3 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 MA 02110-1301  USA
 
 More details about the licensing can be found [here](https://www.gnu.org/licenses/lgpl-3.0.en.html).
-
