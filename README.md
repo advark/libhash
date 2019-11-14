@@ -6,7 +6,11 @@ Copyright(c) 2017-19, Yanick Poirier
 - 0.1
     - Initial release
 - 0.1.1
+    - Added CRC-16 CCITT (aka CRC16 CCITT-false)
+    - Added CRC-16 XModem
+    - Added CRC-16 X25
     - Added CRC-32C
+    - Added CRC-32 BZip2
     - Fixed a bug in CRC-32
     - Fixed a bug in SHA2-224
     - Fixed a bug in SHA2-384
@@ -16,7 +20,11 @@ Copyright(c) 2017-19, Yanick Poirier
 ## Description
 libHash is C/C++ library that provides a data hashing API. Supported algorithms are
 
+* CRC16 CCITT
+* CRC16 XModem
+* CRC16 X-25
 * CRC32 as defined in [RFC-1952](https://tools.ietf.org/html/rfc1952)
+* CRC32 BZip2
 * CRC32C is specified as the CRC that uses iSCSI polynomial in [RFC-3720](https://tools.ietf.org/html/rfc3720)
 * MD5 as defined in [RFC-1321](https://tools.ietf.org/html/rfc1321)
 * SHA-1 as defined in FIPS 180-2
@@ -40,16 +48,22 @@ algorithms may be included in future as time permits me to do so.
 ## License
 
 libHash
-Copyright (C) 2017-19 Yanick Poirier
+Copyright (C) 2017-19 Yanick Poirier <ypoirier at hotmail.com>.
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published
-by the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
+This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+MA 02110-1301  USA
 
 More details about the licensing can be found [here](https://www.gnu.org/licenses/lgpl-3.0.en.html).
+
