@@ -117,7 +117,7 @@ int LIBHASH_API hash_md5_get_value( void *h, uint8_t *buf, size_t len );
 int LIBHASH_API hash_md5_destroy( void *h );
 
 #    ifdef __cplusplus
-}   // extern "C"
+} // extern "C"
 #    endif
 
 #endif   // __LH_MD5_H00__

@@ -29,7 +29,7 @@
 #ifndef __LH_DEFS_H00__
 #    define __LH_DEFS_H00__
 
-#    ifndef __GNUC__
+#    ifndef __GNUC__ 
 #        error "Unsupported compiler... Only g++ is supported."
 #    endif
 
