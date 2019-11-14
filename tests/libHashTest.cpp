@@ -41,7 +41,7 @@ public:
     }
 
     void addFailure( const CPPUNIT_NS::TestFailure &failure ) {
-        CPPUNIT_NS::stdCOut( ) << " : " << ( failure.isError( ) ? "error" : "assertion" );
+        CPPUNIT_NS::stdCOut( ) << ( failure.isError( ) ? "error" : "Failed" );
         m_lastTestFailed = true;
     }
 

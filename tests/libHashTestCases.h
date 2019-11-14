@@ -14,12 +14,19 @@
 #ifndef LIBHASH_TESTCASE_H
 #    define LIBHASH_TESTCASE_H
 
+#    include <libhash/libhash.h>
 #    include <cppunit/extensions/HelperMacros.h>
+
+using namespace libhash;
 
 struct TestData {
     char *data;
     uint32_t size;
+    uint8_t crc16ccitt[2];
+    uint8_t crc16xmodem[2];
+    uint8_t crc16x25[2];
     uint8_t crc32[4];
+    uint8_t crc32bzip2[4];
     uint8_t crc32c[4];
     uint8_t md5[16];
     uint8_t sha1[20];
@@ -32,7 +39,11 @@ struct TestData {
 class libHashTestCases : public CPPUNIT_NS::TestFixture {
     CPPUNIT_TEST_SUITE( libHashTestCases );
 
+    CPPUNIT_TEST( testCRC16_CCITT );
+    CPPUNIT_TEST( testCRC16_XModem );
+    CPPUNIT_TEST( testCRC16_X25 );
     CPPUNIT_TEST( testCRC32 );
+    CPPUNIT_TEST( testCRC32BZip2 );
     CPPUNIT_TEST( testCRC32C );
     CPPUNIT_TEST( testMD5 );
     CPPUNIT_TEST( testSHA1 );
@@ -50,7 +61,13 @@ public:
     void tearDown( );
 
 private:
+    void runSingleChunk( int testNo, HashingBase &pHash, const char *name, void *data, uint32_t size, uint8_t expected[] );
+    void runMultiChunk( int testNo, HashingBase &pHash, const char *name, void *data, uint32_t size, uint32_t chunkSize, uint8_t expected[] );
+    void testCRC16_CCITT( );
+    void testCRC16_XModem( );
+    void testCRC16_X25( );
     void testCRC32( );
+    void testCRC32BZip2( );
     void testCRC32C( );
     void testMD5( );
     void testSHA1( );

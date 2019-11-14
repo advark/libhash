@@ -23,7 +23,15 @@ TestData libHashTestCases::testCases[] = {
     // Test #1
     {
         (char *) "", 0,
+        // CRC-16-CCITT
+        { 0xff, 0xff },
+        // CRC-16-XModem
+        { 0x00, 0x00 },
+        // CRC-16-X25
+        { 0x00, 0x00 },
         // CRC-32
+        { 0x00, 0x00, 0x00, 0x00 },
+        // CRC-32-BZIP2
         { 0x00, 0x00, 0x00, 0x00 },
         // CRC-32C
         { 0x00, 0x00, 0x00, 0x00 },
@@ -64,8 +72,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #2
     {
         (char*) "a", 1,
+        // CRC-16-CCITT
+        { 0x9d, 0x77 },
+        // CRC-16-XModem
+        { 0x7c, 0x87 },
+        // CRC-16-X25
+        { 0x82, 0xf7 },
         // CRC-32
         { 0xe8, 0xb7, 0xbe, 0x43 },
+        // CRC-32-BZIP2
+        { 0x19, 0x93, 0x9b, 0x6b },
         // CRC-32C
         { 0xc1, 0xd0, 0x43, 0x30 },
         // MD5
@@ -105,8 +121,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #3
     {
         (char*) "abc", 3,
+        // CRC-16-CCITT
+        { 0x51, 0x4a },
+        // CRC-16-XModem
+        { 0x9d, 0xd6 },
+        // CRC-16-X25
+        { 0x9e, 0x25 },
         // CRC-32
         { 0x35, 0x24, 0x41, 0xc2 },
+        // CRC-32-BZIP2
+        { 0x64, 0x8c, 0xbb, 0x73 },
         // CRC-32C
         { 0x36, 0x4b, 0x3f, 0xb7 },
         // MD5
@@ -146,8 +170,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #4
     {
         (char*) "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq", 56,
+        // CRC-16-CCITT
+        { 0x25, 0x3a },
+        // CRC-16-XModem
+        { 0xbc, 0x95 },
+        // CRC-16-X25
+        { 0xb9, 0xc5 },
         // CRC-32
         { 0x17, 0x1a, 0x3f, 0x5f },
+        // CRC-32-BZIP2
+        { 0x1d, 0x6e, 0x46, 0xc5 },
         // CRC-32C
         { 0x07, 0x13, 0x25, 0xf5 },
         // MD5
@@ -187,8 +219,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #5
     {
         (char*) "abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu", 112,
+        // CRC-16-CCITT
+        { 0xe9, 0x3b },
+        // CRC-16-XModem
+        { 0x91, 0x45 },
+        // CRC-16-X25
+        { 0x13, 0x32 },
         // CRC-32
         { 0x19, 0x1f, 0x33, 0x49 },
+        // CRC-32-BZIP2
+        { 0xb7, 0x05, 0x51, 0x3b },
         // CRC-32C
         { 0x3f, 0x60, 0xa4, 0xb9 },
         // MD5
@@ -228,8 +268,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #6
     {
         (char*) "abcdefghijklmnopqrstuvwxyz", 26,
+        // CRC-16-CCITT
+        { 0x53, 0xe2 },
+        // CRC-16-XModem
+        { 0x63, 0xac },
+        // CRC-16-X25
+        { 0x0d, 0x43 },
         // CRC-32
         { 0x4c, 0x27, 0x50, 0xbd },
+        // CRC-32-BZIP2
+        { 0x77, 0xbf, 0x93, 0x96 },
         // CRC-32C
         { 0x9e, 0xe6, 0xef, 0x25 },
         // MD5
@@ -269,8 +317,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #7
     {
         (char*) "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 62,
+        // CRC-16-CCITT
+        { 0xb4, 0x6b },
+        // CRC-16-XModem
+        { 0x7d, 0xb0 },
+        // CRC-16-X25
+        { 0xf3, 0xb9 },
         // CRC-32
         { 0x1f, 0xc2, 0xe6, 0xd2 },
+        // CRC-32-BZIP2
+        { 0xa0, 0x74, 0x21, 0x88 },
         // CRC-32C
         { 0xa2, 0x45, 0xd5, 0x7d },
         // MD5
@@ -310,8 +366,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #8
     {
         (char*) "12345678901234567890123456789012345678901234567890123456789012345678901234567890", 80,
+        // CRC-16-CCITT
+        { 0xda, 0xdf },
+        // CRC-16-XModem
+        { 0xe7, 0x3a },
+        // CRC-16-X25
+        { 0x1b, 0x36 },
         // CRC-32
         { 0x7c, 0xa9, 0x4a, 0x72 },
+        // CRC-32-BZIP2
+        { 0x16, 0x08, 0x79, 0x96 },
         // CRC-32C
         { 0x47, 0x7a, 0x67, 0x81 },
         // MD5
@@ -351,8 +415,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #9
     {
         NULL, 1000000,
+        // CRC-16-CCITT
+        { 0x59, 0x24 },
+        // CRC-16-XModem
+        { 0x90, 0x9f },
+        // CRC-16-X25
+        { 0xb7, 0x1b },
         // CRC-32
         { 0xdc, 0x25, 0xbf, 0xbc },
+        // CRC-32-BZIP2
+        { 0x97, 0xbe, 0xdc, 0x38 },
         // CRC-32C
         { 0x43, 0x6f, 0xe2, 0x40 },
         // MD5
@@ -392,8 +464,16 @@ TestData libHashTestCases::testCases[] = {
     // Test #10
     {
         NULL, 1024,
+        // CRC-16-CCITT
+        { 0x39, 0x74 },
+        // CRC-16-XModem
+        { 0x8e, 0x1b },
+        // CRC-16-X25
+        { 0xcb, 0xe0 },
         // CRC-32
         { 0x93, 0x74, 0x90, 0x63 },
+        // CRC-32-BZIP2
+        { 0x26, 0xaa, 0xbf, 0xbf },
         // CRC-32C
         { 0xb7, 0x7a, 0x35, 0x8a },
         // MD5
@@ -461,5 +541,107 @@ void libHashTestCases::tearDown( ) {
 
     i = ( sizeof ( testCases ) / sizeof (struct TestData ) ) - 1;
     free( testCases[ i ].data );
+}
+
+void libHashTestCases::runSingleChunk( int testNo, HashingBase &hash, const char *name, void *data, uint32_t size, uint8_t expected[] ) {
+    //    char *msg;
+    std::string msg;
+    uint8_t result[hash.getHashSize( ) / 8];
+
+    //    printf( "Single block testing (%d bytes): ", size );
+
+    hash.init( );
+    hash.update( data, size );
+    hash.finalize( );
+    hash.getValue( result, sizeof ( result ) );
+
+    if( memcmp( result, expected, sizeof ( result ) ) != 0 ) {
+        msg += name;
+        msg += " Test #";
+        msg += std::to_string( testNo );
+        msg += " failed.\n";
+        msg += "      Result  = ";
+        for( int i = 0; i < sizeof ( result ); i++ ) {
+            if( i % 16 == 0 && i != 0 && hash.getHashSize( ) > 160 ) {
+                msg += "\n                ";
+            }
+            char tmp[3];
+            snprintf( tmp, 3, "%02x", result[i] );
+            msg += tmp;
+        }
+
+        msg += "\n      Expected= ";
+        for( int i = 0; i < sizeof ( result ); i++ ) {
+            if( i % 16 == 0 && i != 0 && hash.getHashSize( ) > 160 ) {
+                msg += "\n                ";
+            }
+            char tmp[3];
+            snprintf( tmp, 3, "%02x", expected[i] );
+            msg += tmp;
+        }
+
+        CPPUNIT_FAIL( msg );
+    }
+    //    else {
+    //        printf( "Passed.\n" );
+    //    }
+}
+
+void libHashTestCases::runMultiChunk( int testNo, HashingBase &hash, const char *name, void *data, uint32_t size, uint32_t chunkSize, uint8_t expected[] ) {
+    std::string msg;
+    uint8_t result[hash.getHashSize( ) / 8];
+
+    //    printf( "Multi block testing (%d bytes, blk=%d): ", size, chunkSize );
+
+    int s = 0;
+    hash.init( );
+    //    if( size > 0 ) {
+    for( int i = 0; i < size; i += chunkSize ) {
+        if( ( size - s )  > chunkSize ) {
+            hash.update( ( (uint8_t *) data ) + i, chunkSize );
+            s += chunkSize;
+        }
+        else {
+            hash.update( ( (uint8_t *) data ) + i, size - s );
+        }
+    }
+    //}
+    //    else {
+    //        hash.update( data, size );
+    //    }
+
+    hash.finalize( );
+    hash.getValue( result, sizeof ( result ) );
+
+    if( memcmp( result, expected, sizeof ( result ) ) != 0 ) {
+        msg += name;
+        msg += " Test #";
+        msg += std::to_string( testNo );
+        msg += " failed.\n";
+        msg += "      Result  = ";
+        for( int i = 0; i < sizeof ( result ); i++ ) {
+            if( i % 16 == 0 && i != 0 && hash.getHashSize( ) > 160 ) {
+                msg += "\n                ";
+            }
+            char tmp[3];
+            snprintf( tmp, 3, "%02x", result[i] );
+            msg += tmp;
+        }
+
+        msg += "\n      Expected= ";
+        for( int i = 0; i < sizeof ( result ); i++ ) {
+            if( i % 16 == 0 && i != 0 && hash.getHashSize( ) > 160 ) {
+                msg += "\n                ";
+            }
+            char tmp[3];
+            snprintf( tmp, 3, "%02x", expected[i] );
+            msg += tmp;
+        }
+
+        CPPUNIT_FAIL( msg );
+    }
+    //    else {
+    //        printf( "Passed.\n" );
+    //    }
 }
 
