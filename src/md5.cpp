@@ -165,8 +165,9 @@ static unsigned char PADDING[64] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-// -------------------------------------------------------------------------
-
+/**
+ * @copydoc HashingBase::init()
+ */
 void MD5::init( ) {
     mBitCount[ 0 ] = 0;
     mBitCount[ 1 ] = 0;
@@ -178,8 +179,9 @@ void MD5::init( ) {
     mState[ 3 ] = 0x10325476;
 }
 
-// -------------------------------------------------------------------------
-
+/**
+ * @copydoc HashingBase::update( const void *, size_t )
+ */
 void MD5::update( const void *data, size_t size ) {
     uint32_t i, index, partLen;
 
@@ -215,8 +217,9 @@ void MD5::update( const void *data, size_t size ) {
     ::memcpy( mBlock + index, ( (uint8_t *) data ) + i, size - i );
 }
 
-// -------------------------------------------------------------------------
-
+/**
+ * @copydoc HashingBase::finalize()
+ */
 void MD5::finalize( ) {
     uint8_t bits[8];
     uint32_t index, padLen;
@@ -245,8 +248,6 @@ void MD5::finalize( ) {
     mState[ 2 ] = 0;
     mState[ 3 ] = 0;
 }
-
-// -------------------------------------------------------------------------
 
 /**
  * @brief MD5 basic transformation.
@@ -345,8 +346,6 @@ void MD5::transform( uint8_t *block ) {
     ::memset( &x, 0, sizeof (x ) );
 }
 
-// -------------------------------------------------------------------------
-
 /**
  * @brief Creates a new MD5 handler.
  *
@@ -355,8 +354,6 @@ void MD5::transform( uint8_t *block ) {
 void* hash_md5_create( ) {
     return new MD5( );
 }
-
-// -------------------------------------------------------------------------
 
 /**
  * @brief Initializes the specified MD5 handler.
@@ -379,8 +376,6 @@ int hash_md5_init( void *h ) {
 
     return rc;
 }
-
-// -------------------------------------------------------------------------
 
 /**
  * @brief Updates the specified MD5 handler's state with the data.
@@ -408,8 +403,6 @@ int hash_md5_update( void *h, void *buf, size_t len ) {
     return rc;
 }
 
-// -------------------------------------------------------------------------
-
 /**
  * @brief Finalizes the specified MD5 handler's state.
  *
@@ -434,8 +427,6 @@ int hash_md5_finalize( void *h ) {
 
     return rc;
 }
-
-// -------------------------------------------------------------------------
 
 /**
  * @brief Retrieves the hashing value after the last <tt>hash_md5_finalize</tt>
@@ -464,8 +455,6 @@ int hash_md5_get_value( void *h, uint8_t *buf, size_t len ) {
     return rc;
 }
 
-// -------------------------------------------------------------------------
-
 /**
  * Destroys an existing MD5 handler.
  *
@@ -486,4 +475,3 @@ int hash_md5_destroy( void *h ) {
 }
 
 // EOF: md5.cpp
-
