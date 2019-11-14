@@ -61,17 +61,30 @@ namespace libhash {
  * Note: All derived classes must used the reverse polynomial in order to create the
  * correct lookup tables.
  */
-class LIBHASH_API CRC32Base : public HashingBase {
+class LIBHASH_API CRC32Base : public CRCBase {
 public:
-
-    CRC32Base( uint32_t initValue, uint32_t polynomial );
 
     virtual ~CRC32Base( );
 
     virtual void init( );
     virtual void finalize( );
 
+    inline uint32_t getXorValue( ) {
+        return mXorValue;
+    }
+
+    inline uint32_t getPolynomial( ) {
+        return mPolynomial;
+    }
+
+    inline uint32_t getInitialValue( ) {
+        return mInit;
+    }
+
+
 protected:
+    CRC32Base( uint32_t initValue, uint32_t polynomial, uint32_t xorValue, bool inReflect, bool outReflect );
+
     virtual void update( uint32_t *lookupTable, const void *data, size_t size );
     void initLookupTable( uint32_t *table );
 
@@ -81,6 +94,7 @@ protected:
 private:
     uint32_t mInit;
     uint32_t mPolynomial;
+    uint32_t mXorValue;
 
 } ; // class CRC32Base
 
@@ -102,10 +116,10 @@ private:
 class LIBHASH_API CRC32 : public CRC32Base {
 public:
     CRC32( );
-    virtual ~CRC32( );
+
+    virtual ~CRC32( ) { };
 
     virtual void update( const void *data, size_t size );
-    virtual void finalize( );
 
 protected:
 
@@ -114,6 +128,37 @@ private:
     static uint32_t msLookup[ 256 ];
     static bool msTableInit;
 } ;  // class CRC32
+
+/**
+ * @brief CRC32 algorithm as defined by RFC-1952.
+ *
+ * It provides a 32-bits hash fingerprint.
+ *
+ * Note: The first time a CRC-32 object is created, the constructor also builds the lookup
+ * table so the it will take a little more as the  subsequent object creation. The main
+ * reason is to avoid using memory that will not be needed if the class is not used. 1KB
+ * may seems ridiculus on modern computer but may have huge impact on embedded systems.
+ *
+ * @author Yanick Poirier (2017/03/20)
+ *
+ * @see https://tools.ietf.org/html/rfc1952
+ * @see CRC32C
+ */
+class LIBHASH_API CRC32_BZip2 : public CRC32Base {
+public:
+    CRC32_BZip2( );
+
+    virtual ~CRC32_BZip2( ) { };
+
+    virtual void update( const void *data, size_t size );
+
+protected:
+
+private:
+    /** CRC lookup table */
+    static uint32_t msLookup[ 256 ];
+    static bool msTableInit;
+} ;  // class CRC32_BZip2
 
 /**
  * @brief A CRC32-C implementation.
@@ -133,10 +178,10 @@ private:
 class LIBHASH_API CRC32C : public CRC32Base {
 public:
     CRC32C( );
-    virtual ~CRC32C( );
+
+    virtual ~CRC32C( ) { };
 
     virtual void update( const void *data, size_t size );
-    virtual void finalize( );
 
 protected:
 
