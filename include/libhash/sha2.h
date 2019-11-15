@@ -103,7 +103,7 @@ protected:
 
 /**
  * This class implements the SHA-2 224-bits Secure Hash Algorithm as defined in the
- * FIPS 180-4 document released in August 2015.
+ * FIPS 180-2 document released in August 2015.
  *
  * @author Yanick Poirier (2017/01/25)
  */
@@ -178,7 +178,7 @@ protected:
 
 /**
  * This class implements the SHA-2 384-bits Secure Hash Algorithm as defined in the
- * FIPS 180-4 document released in August 2015.
+ * FIPS 180-2 document released in August 2015.
  *
  * @author Yanick Poirier (2017/01/25)
  */
