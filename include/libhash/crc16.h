@@ -65,6 +65,7 @@ namespace libhash {
  */
 class LIBHASH_API CRC16Base : public CRCBase {
 public:
+    CRC16Base( uint16_t, uint16_t, uint16_t, bool, bool );
     virtual ~CRC16Base( );
 
     virtual void init( );
@@ -83,8 +84,6 @@ public:
     }
 
 protected:
-    CRC16Base( uint16_t, uint16_t, uint16_t, bool, bool );
-
     void update( uint16_t *, const void *, size_t );
     void initLookupTable( uint16_t * );
 
@@ -115,7 +114,6 @@ public:
     virtual ~CRC16_CCITT( );
 
     virtual void update( const void *data, size_t size );
-    //    virtual void finalize( );
 
 protected:
 
@@ -143,7 +141,6 @@ public:
     virtual ~CRC16_XModem( );
 
     virtual void update( const void *data, size_t size );
-    //    virtual void finalize( );
 
 protected:
 
@@ -169,7 +166,6 @@ public:
     virtual ~CRC16_X25( );
 
     virtual void update( const void *data, size_t size );
-    //    virtual void finalize( );
 
 protected:
 

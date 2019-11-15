@@ -124,7 +124,6 @@ public:
     virtual void finalize( );
 
 protected:
-
 } ;
 
 /**
@@ -175,7 +174,6 @@ protected:
 
     /** Current message block. */
     uint8_t     mBlock[128];
-
 } ;
 
 /**

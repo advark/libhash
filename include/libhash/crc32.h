@@ -65,7 +65,7 @@ namespace libhash {
  */
 class LIBHASH_API CRC32Base : public CRCBase {
 public:
-
+    CRC32Base( uint32_t, uint32_t, uint32_t, bool, bool );
     virtual ~CRC32Base( );
 
     virtual void init( );
@@ -83,12 +83,9 @@ public:
         return mInit;
     }
 
-
 protected:
-    CRC32Base( uint32_t initValue, uint32_t polynomial, uint32_t xorValue, bool inReflect, bool outReflect );
-
-    virtual void update( uint32_t *lookupTable, const void *data, size_t size );
-    void initLookupTable( uint32_t *table );
+    virtual void update( uint32_t *, const void *, size_t  );
+    void initLookupTable( uint32_t * );
 
     /** Current hashing state. */
     uint32_t    mState;

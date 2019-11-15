@@ -95,8 +95,6 @@ CRC16Base::CRC16Base( uint16_t initValue,
     mInit = initValue;
     mPolynomial = polynomial;
     mXorValue = xorValue;
-    //    mInReflection = inReflect;
-    //    mOutReflection = outReflect;
 }
 
 #include <stdio.h>
