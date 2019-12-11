@@ -71,14 +71,29 @@ public:
     virtual void init( );
     virtual void finalize( );
 
+    /**
+     * Retrieves the value that will be XOR'ed with the final CRC.
+     *
+     * @return value to be XOR'ed
+     */
     inline uint16_t getXorValue( ) {
         return mXorValue;
     }
 
+    /**
+     * Retrieves the polynomial used by this CRC.
+     *
+     * @return CRC's polynomial
+     */
     inline uint16_t getPolynomial( ) {
         return mPolynomial;
     }
 
+    /**
+     * Retrieves the CRC's initial value.
+     *
+     * @return CRC's initial value.
+     */
     inline uint16_t getInitialValue( ) {
         return mInit;
     }
@@ -94,7 +109,7 @@ private:
     uint16_t mInit;
     uint16_t mPolynomial;
     uint16_t mXorValue;
-} ; // class CRC32Base
+} ; // class CRC16Base
 
 /**
  * @brief CRC16-CCITT algorithm.

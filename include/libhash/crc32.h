@@ -71,14 +71,29 @@ public:
     virtual void init( );
     virtual void finalize( );
 
+    /**
+     * Retrieves the value that will be XOR'ed with the final CRC.
+     *
+     * @return value to be XOR'ed
+     */
     inline uint32_t getXorValue( ) {
         return mXorValue;
     }
 
+    /**
+     * Retrieves the polynomial used by this CRC.
+     *
+     * @return CRC's polynomial
+     */
     inline uint32_t getPolynomial( ) {
         return mPolynomial;
     }
 
+    /**
+     * Retrieves the CRC's initial value.
+     *
+     * @return CRC's initial value.
+     */
     inline uint32_t getInitialValue( ) {
         return mInit;
     }
